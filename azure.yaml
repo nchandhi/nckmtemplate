@@ -1,0 +1,36 @@
+# azure.yaml
+
+environment:
+  name: dev
+  location: eastus
+
+parameters:
+  solutionPrefix:
+    type: string
+    default: bs-azdtest  
+  otherLocation:
+    type: string
+    default: eastus2
+  baseUrl:
+    type: string
+    default: 'https://raw.githubusercontent.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator/main/'
+
+deployment:
+  mode: Incremental
+  template: ./infra/main.bicep  # Path to the main.bicep file inside the 'deployment' folder
+  parameters:
+    solutionPrefix: ${parameters.solutionPrefix}
+    otherLocation: ${parameters.otherLocation}
+    baseUrl: ${parameters.baseUrl}
+
+# modules:
+#   - name: deploy_managed_identity
+#     module: ./infra/deploy_managed_identity.bicep
+#     params:
+#       solutionName: ${parameters.solutionPrefix}
+#       solutionLocation: eastus
+#   - name: deploy_ai_foundry
+#     module: ./infra/deploy_ai_foundry.bicep
+#     params:
+#       solutionName: ${parameters.solutionPrefix}
+#       solutionLocation: eastus

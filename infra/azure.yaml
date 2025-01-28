@@ -1,0 +1,157 @@
+# azure.yaml
+
+# Define the environment
+environment:
+  name: dev
+  location: eastus
+
+# Define parameters
+parameters:
+  solutionPrefix:
+    type: string
+    default: mySolutionPrefix  # Set a default prefix for your solution
+  otherLocation:
+    type: string
+    default: eastus2  # Set a default location for the "otherLocation" parameter
+  baseUrl:
+    type: string
+    default: 'https://raw.githubusercontent.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator/main/'  
+
+# Define deployment strategy
+deployment:
+  mode: Incremental
+  template: ./main.bicep  # Path to the main.bicep file
+  parameters:
+    solutionPrefix: ${parameters.solutionPrefix}
+    otherLocation: ${parameters.otherLocation}
+    baseUrl: ${parameters.baseUrl}
+
+# Define module dependencies
+modules:
+
+  # Key Vault (existing resource)
+  - name: existing_keyvault
+    module: Microsoft.KeyVault/vaults@2022-07-01
+    params:
+      keyVaultName: ${modules.deploy_ai_foundry.outputs.keyvaultName}
+      solutionLocation: eastus
+
+  # Managed Identity
+  - name: deploy_managed_identity
+    module: deploy_managed_identity.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      solutionLocation: eastus  
+
+  # AI Foundry
+  - name: deploy_ai_foundry
+    module: deploy_ai_foundry.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      solutionLocation: eastus  
+      managedIdentityObjectId: ${modules.deploy_managed_identity.outputs.managedIdentityOutput.objectId}
+
+  # Storage Account
+  - name: deploy_storage_account
+    module: deploy_storage_account.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      solutionLocation: eastus  
+      keyVaultName: ${modules.deploy_ai_foundry.outputs.keyvaultName}
+      managedIdentityObjectId: ${modules.deploy_managed_identity.outputs.managedIdentityOutput.objectId}
+
+  # Cosmos DB
+  - name: deploy_cosmos_db
+    module: deploy_cosmos_db.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      solutionLocation: ${parameters.otherLocation}  # Using "otherLocation"
+      keyVaultName: ${modules.deploy_ai_foundry.outputs.keyvaultName}
+
+  # SQL DB
+  - name: deploy_sql_db
+    module: deploy_sql_db.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      solutionLocation: ${parameters.otherLocation}  # Using "otherLocation"
+      keyVaultName: ${modules.deploy_ai_foundry.outputs.keyvaultName}
+
+  # Upload Files Script
+  # - name: deploy_upload_files_script
+  #   module: deploy_upload_files_script.bicep
+  #   params:
+  #     solutionLocation: eastus  
+  #     baseUrl: ${parameters.baseUrl}
+  #     storageAccountName: ${modules.deploy_storage_account.outputs.storageName}
+  #     containerName: ${modules.deploy_storage_account.outputs.storageContainer}
+  #     managedIdentityObjectId: ${modules.deploy_managed_identity.outputs.managedIdentityOutput.id}
+  #   dependsOn: [existing_keyvault]
+
+  # Create Index Scripts
+  # - name: deploy_index_scripts
+  #   module: deploy_index_scripts.bicep
+  #   params:
+  #     solutionLocation: eastus  
+  #     identity: ${modules.deploy_managed_identity.outputs.managedIdentityOutput.id}
+  #     baseUrl: ${parameters.baseUrl}
+  #     keyVaultName: ${modules.deploy_ai_foundry.outputs.keyvaultName}
+  #   dependsOn: [existing_keyvault, deploy_sql_db, deploy_upload_files_script]
+
+  # Azure Function Charts
+  - name: deploy_azure_function_charts
+    module: deploy_azure_function_charts.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      solutionLocation: eastus  
+      sqlServerName: ${modules.deploy_sql_db.outputs.sqlServerName}
+      sqlDbName: ${modules.deploy_sql_db.outputs.sqlDbName}
+      sqlDbUser: ${modules.deploy_sql_db.outputs.sqlDbUser}
+      sqlDbPwd: ${existing_keyvault.getSecret('SQLDB-PASSWORD')}
+    dependsOn: [existing_keyvault]
+
+  # Azure Function RAG
+  - name: deploy_azure_function_rag
+    module: deploy_azure_function_rag.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      solutionLocation: eastus  
+      azureOpenAIApiKey: ${existing_keyvault.getSecret('AZURE-OPENAI-KEY')}
+      azureOpenAIEndpoint: ${modules.deploy_ai_foundry.outputs.aiServicesTarget}
+      azureSearchAdminKey: ${existing_keyvault.getSecret('AZURE-SEARCH-KEY')}
+      azureSearchServiceEndpoint: ${modules.deploy_ai_foundry.outputs.aiSearchTarget}
+      azureOpenAIApiVersion: '2024-02-15-preview'
+      azureSearchIndex: 'call_transcripts_index'
+      sqlServerName: ${modules.deploy_sql_db.outputs.sqlServerName}
+      sqlDbName: ${modules.deploy_sql_db.outputs.sqlDbName}
+      sqlDbUser: ${modules.deploy_sql_db.outputs.sqlDbUser}
+      sqlDbPwd: ${existing_keyvault.getSecret('SQLDB-PASSWORD')}
+    dependsOn: [existing_keyvault]
+
+  # Azure Function URLs
+  - name: deploy_azure_function_urls
+    module: deploy_azure_function_urls.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+    dependsOn: [deploy_azure_function_charts, deploy_azure_function_rag]
+
+  # App Service
+  - name: deploy_app_service
+    module: deploy_app_service.bicep
+    params:
+      solutionName: ${parameters.solutionPrefix}
+      AzureOpenAIEndpoint: ${modules.deploy_ai_foundry.outputs.aiServicesTarget}
+      AzureOpenAIModel: 'gpt-4o-mini'
+      AzureOpenAIKey: ${existing_keyvault.getSecret('AZURE-OPENAI-KEY')}
+      azureOpenAIApiVersion: '2024-02-15-preview'
+      AZURE_OPENAI_RESOURCE: ${modules.deploy_ai_foundry.outputs.aiServicesName}
+      CHARTS_URL: ${modules.deploy_azure_function_urls.outputs.functionURLsOutput.charts_function_url}
+      FILTERS_URL: ${modules.deploy_azure_function_urls.outputs.functionURLsOutput.filters_function_url}
+      USE_GRAPHRAG: 'False'
+      USE_CHAT_HISTORY_ENABLED: 'True'
+      GRAPHRAG_URL: ${modules.deploy_azure_function_urls.outputs.functionURLsOutput.graphrag_function_url}
+      RAG_URL: ${modules.deploy_azure_function_urls.outputs.functionURLsOutput.rag_function_url}
+      AZURE_COSMOSDB_ACCOUNT: ${modules.deploy_cosmos_db.outputs.cosmosAccountName}
+      AZURE_COSMOSDB_CONVERSATIONS_CONTAINER: ${modules.deploy_cosmos_db.outputs.cosmosContainerName}
+      AZURE_COSMOSDB_DATABASE: ${modules.deploy_cosmos_db.outputs.cosmosDatabaseName}
+      AZURE_COSMOSDB_ENABLE_FEEDBACK: 'True'
+    dependsOn: [deploy_sql_db]
