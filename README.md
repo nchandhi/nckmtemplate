@@ -57,13 +57,26 @@ Company personnel (employees, executives) looking to gain conversational insight
 ### Solution accelerator architecture
 ![image](./Documents/Images/ReadMe/ckm-v2-sa.png)
 
+
+### VS Code Dev Containers
+
+A related option is VS Code Dev Containers, which will open the project in your local VS Code using the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers):
+
+1. Start Docker Desktop (install it if not already installed)
+2. Open the project:
+
+    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://https://github.com/nchandhi/nckmtemplate)
+
+3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
+4. Continue with the [deploying steps](#deploying)
+
 <h2><img src="./Documents/Images/ReadMe/oneClickDeploy.png" width="64">
 <br/>
 Simple deploy
 </h2>
 
-
 ### **How to install/deploy**
+
 
 1. **Deploy Azure resources**  
    Click the following deployment button to create the required resources for this accelerator directly in your Azure Subscription.
