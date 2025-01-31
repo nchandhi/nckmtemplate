@@ -1,4 +1,4 @@
 using './main.bicep'
 
-param solutionPrefix = 'bsaif1'
+param solutionPrefix = 'afait1'
 param otherLocation = 'eastus2'

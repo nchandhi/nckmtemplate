@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.32.4.45862",
-      "templateHash": "16964994139844363160"
+      "version": "0.24.24.22086",
+      "templateHash": "15483749367986317390"
     }
   },
   "parameters": {
@@ -26,9 +26,8 @@
   },
   "variables": {
     "resourceGroupLocation": "[resourceGroup().location]",
-    "resourceGroupName": "[resourceGroup().name]",
     "solutionLocation": "[variables('resourceGroupLocation')]",
-    "baseUrl": "https://raw.githubusercontent.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator/main/"
+    "baseUrl": "https://raw.githubusercontent.com/nchandhi/nckmtemplate/main/"
   },
   "resources": [
     {
@@ -55,8 +54,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "9540019694218374629"
+              "version": "0.24.24.22086",
+              "templateHash": "1743476025635286582"
             }
           },
           "parameters": {
@@ -147,8 +146,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "7307097157056975862"
+              "version": "0.24.24.22086",
+              "templateHash": "10298043622985725899"
             }
           },
           "parameters": {
@@ -201,9 +200,8 @@
               }
             ],
             "containerRegistryNameCleaned": "[replace(variables('containerRegistryName'), '-', '')]",
-            "storageNameCleaned": "[replace(variables('storageName'), '-', '')]"
-            // "serverlessModelName": "Phi-3-medium-4k-instruct",
-            // "phi3serverlessName": "[format('{0}-{1}', parameters('solutionName'), variables('serverlessModelName'))]"
+            "storageNameCleaned": "[replace(variables('storageName'), '-', '')]",
+            "serverlessModelName": "Phi-3-medium-4k-instruct"
           },
           "resources": [
             {
@@ -558,28 +556,6 @@
               ]
             },
             {
-              "type": "Microsoft.MachineLearningServices/workspaces/serverlessEndpoints",
-              "apiVersion": "2024-10-01",
-              "name": "[format('{0}/{1}', variables('aiProjectName'), variables('phi3serverlessName'))]",
-              "location": "[variables('location')]",
-              "properties": {
-                "authMode": "Key",
-                "contentSafety": {
-                  "contentSafetyStatus": "Enabled"
-                },
-                "modelSettings": {
-                  "modelId": "[format('azureml://registries/azureml/models/{0}', variables('serverlessModelName'))]"
-                }
-              },
-              "sku": {
-                "name": "Consumption",
-                "tier": "Free"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.MachineLearningServices/workspaces', variables('aiProjectName'))]"
-              ]
-            },
-            {
               "type": "Microsoft.KeyVault/vaults/secrets",
               "apiVersion": "2021-11-01-preview",
               "name": "[format('{0}/{1}', variables('keyvaultName'), 'TENANT-ID')]",
@@ -797,10 +773,6 @@
               "type": "string",
               "value": "[resourceId('Microsoft.CognitiveServices/accounts', variables('aiServicesName_m'))]"
             },
-            "aiInfereceEndpoint": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.MachineLearningServices/workspaces/serverlessEndpoints', variables('aiProjectName'), variables('phi3serverlessName')), '2024-10-01').inferenceEndpoint.uri]"
-            },
             "aiSearchName": {
               "type": "string",
               "value": "[variables('aiSearchName')]"
@@ -854,8 +826,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "4054020608454748933"
+              "version": "0.24.24.22086",
+              "templateHash": "6304291045823209723"
             }
           },
           "parameters": {
@@ -894,8 +866,7 @@
               "name": "[parameters('saName')]",
               "location": "[parameters('solutionLocation')]",
               "sku": {
-                "name": "Standard_LRS",
-                "tier": "Standard"
+                "name": "Standard_LRS"
               },
               "kind": "StorageV2",
               "properties": {
@@ -952,8 +923,7 @@
                 "publicAccess": "None"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('saName'), 'default')]",
-                "[resourceId('Microsoft.Storage/storageAccounts', parameters('saName'))]"
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', parameters('saName'), 'default')]"
               ]
             },
             {
@@ -1038,8 +1008,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "10403900831974927682"
+              "version": "0.24.24.22086",
+              "templateHash": "5569699817349321880"
             }
           },
           "parameters": {
@@ -1091,7 +1061,7 @@
               },
               "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
               "apiVersion": "2022-05-15",
-              "name": "[format('{0}/{1}/{2}', split(format('{0}/{1}', variables('accountName'), variables('databaseName')), '/')[0], split(format('{0}/{1}', variables('accountName'), variables('databaseName')), '/')[1], variables('containers')[copyIndex()].name)]",
+              "name": "[format('{0}/{1}/{2}', variables('accountName'), variables('databaseName'), variables('containers')[copyIndex()].name)]",
               "properties": {
                 "resource": {
                   "id": "[variables('containers')[copyIndex()].id]",
@@ -1104,7 +1074,7 @@
                 "options": {}
               },
               "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', split(format('{0}/{1}', variables('accountName'), variables('databaseName')), '/')[0], split(format('{0}/{1}', variables('accountName'), variables('databaseName')), '/')[1])]"
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('accountName'), variables('databaseName'))]"
               ]
             },
             {
@@ -1244,8 +1214,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "11476223078836576838"
+              "version": "0.24.24.22086",
+              "templateHash": "2233458317504163767"
             }
           },
           "parameters": {
@@ -1277,7 +1247,6 @@
               "apiVersion": "2023-08-01-preview",
               "name": "[variables('serverName')]",
               "location": "[variables('location')]",
-              "kind": "v12.0",
               "properties": {
                 "administratorLogin": "[variables('administratorLogin')]",
                 "administratorLoginPassword": "[variables('administratorLoginPassword')]",
@@ -1321,7 +1290,6 @@
                 "family": "Gen5",
                 "capacity": 2
               },
-              "kind": "v12.0,user,vcore,serverless",
               "properties": {
                 "collation": "SQL_Latin1_General_CP1_CI_AS",
                 "autoPauseDelay": 60,
@@ -1421,8 +1389,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "16162981464101235300"
+              "version": "0.24.24.22086",
+              "templateHash": "11739038998874711928"
             }
           },
           "parameters": {
@@ -1463,7 +1431,7 @@
               },
               "properties": {
                 "azCliVersion": "2.50.0",
-                "primaryScriptUri": "[format('{0}Deployment/scripts/copy_kb_files.sh', parameters('baseUrl'))]",
+                "primaryScriptUri": "[format('{0}infra/scripts/copy_kb_files.sh', parameters('baseUrl'))]",
                 "arguments": "[format('{0} {1} {2}', parameters('storageAccountName'), parameters('containerName'), parameters('baseUrl'))]",
                 "timeout": "PT1H",
                 "retentionInterval": "PT1H",
@@ -1508,8 +1476,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "9968723784632879247"
+              "version": "0.24.24.22086",
+              "templateHash": "14676554298854949288"
             }
           },
           "parameters": {
@@ -1544,7 +1512,7 @@
               },
               "properties": {
                 "azCliVersion": "2.52.0",
-                "primaryScriptUri": "[format('{0}Deployment/scripts/run_create_index_scripts.sh', parameters('baseUrl'))]",
+                "primaryScriptUri": "[format('{0}infra/scripts/run_create_index_scripts.sh', parameters('baseUrl'))]",
                 "arguments": "[format('{0} {1}', parameters('baseUrl'), parameters('keyVaultName'))]",
                 "timeout": "PT1H",
                 "retentionInterval": "PT1H",
@@ -1593,9 +1561,6 @@
               },
               "secretName": "SQLDB-PASSWORD"
             }
-          },
-          "managedIdentityObjectId": {
-            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_managed_identity'), '2022-09-01').outputs.managedIdentityOutput.value.objectId]"
           }
         },
         "template": {
@@ -1604,8 +1569,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "5884595544531896804"
+              "version": "0.24.24.22086",
+              "templateHash": "5077671444931722379"
             }
           },
           "parameters": {
@@ -1629,9 +1594,6 @@
             },
             "sqlDbPwd": {
               "type": "securestring"
-            },
-            "managedIdentityObjectId": {
-              "type": "string"
             }
           },
           "variables": {
@@ -1751,7 +1713,6 @@
       },
       "dependsOn": [
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_ai_foundry')]",
-        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_managed_identity')]",
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_sql_db')]"
       ]
     },
@@ -1815,9 +1776,6 @@
               },
               "secretName": "SQLDB-PASSWORD"
             }
-          },
-          "managedIdentityObjectId": {
-            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_managed_identity'), '2022-09-01').outputs.managedIdentityOutput.value.objectId]"
           }
         },
         "template": {
@@ -1826,8 +1784,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "10442060421232789092"
+              "version": "0.24.24.22086",
+              "templateHash": "7863539602751791161"
             }
           },
           "parameters": {
@@ -1869,9 +1827,6 @@
             },
             "sqlDbPwd": {
               "type": "securestring"
-            },
-            "managedIdentityObjectId": {
-              "type": "string"
             }
           },
           "variables": {
@@ -2027,7 +1982,6 @@
       },
       "dependsOn": [
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_ai_foundry')]",
-        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_managed_identity')]",
         "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_sql_db')]"
       ]
     },
@@ -2043,9 +1997,6 @@
         "parameters": {
           "solutionName": {
             "value": "[parameters('solutionPrefix')]"
-          },
-          "identity": {
-            "value": "[reference(extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_managed_identity'), '2022-09-01').outputs.managedIdentityOutput.value.id]"
           }
         },
         "template": {
@@ -2054,8 +2005,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "13904180097670083480"
+              "version": "0.24.24.22086",
+              "templateHash": "2916305112549677590"
             }
           },
           "parameters": {
@@ -2064,9 +2015,6 @@
               "metadata": {
                 "description": "Specifies the location for resources."
               }
-            },
-            "identity": {
-              "type": "string"
             }
           },
           "variables": {
@@ -2092,8 +2040,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', 'deploy_azure_function_charts')]",
-        "[resourceId('Microsoft.Resources/deployments', 'deploy_azure_function_rag')]",
-        "[extensionResourceId(format('/subscriptions/{0}/resourceGroups/{1}', subscription().subscriptionId, resourceGroup().name), 'Microsoft.Resources/deployments', 'deploy_managed_identity')]"
+        "[resourceId('Microsoft.Resources/deployments', 'deploy_azure_function_rag')]"
       ]
     },
     {
@@ -2181,8 +2128,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.32.4.45862",
-              "templateHash": "17203290032845883855"
+              "version": "0.24.24.22086",
+              "templateHash": "4912941773771272149"
             }
           },
           "parameters": {
@@ -2346,7 +2293,6 @@
                 "name": "[parameters('HostingPlanSku')]"
               },
               "properties": {
-                "name": "[parameters('HostingPlanName')]",
                 "reserved": true
               },
               "kind": "linux"
@@ -2476,10 +2422,10 @@
             {
               "type": "Microsoft.DocumentDB/databaseAccounts/sqlRoleAssignments",
               "apiVersion": "2022-05-15",
-              "name": "[format('{0}/{1}', parameters('AZURE_COSMOSDB_ACCOUNT'), guid(resourceId('Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions', split(format('{0}/00000000-0000-0000-0000-000000000002', parameters('AZURE_COSMOSDB_ACCOUNT')), '/')[0], split(format('{0}/00000000-0000-0000-0000-000000000002', parameters('AZURE_COSMOSDB_ACCOUNT')), '/')[1]), resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('AZURE_COSMOSDB_ACCOUNT'))))]",
+              "name": "[format('{0}/{1}', parameters('AZURE_COSMOSDB_ACCOUNT'), guid(resourceId('Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions', parameters('AZURE_COSMOSDB_ACCOUNT'), '00000000-0000-0000-0000-000000000002'), resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('AZURE_COSMOSDB_ACCOUNT'))))]",
               "properties": {
                 "principalId": "[reference(resourceId('Microsoft.Web/sites', parameters('WebsiteName')), '2020-06-01', 'full').identity.principalId]",
-                "roleDefinitionId": "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions', split(format('{0}/00000000-0000-0000-0000-000000000002', parameters('AZURE_COSMOSDB_ACCOUNT')), '/')[0], split(format('{0}/00000000-0000-0000-0000-000000000002', parameters('AZURE_COSMOSDB_ACCOUNT')), '/')[1])]",
+                "roleDefinitionId": "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlRoleDefinitions', parameters('AZURE_COSMOSDB_ACCOUNT'), '00000000-0000-0000-0000-000000000002')]",
                 "scope": "[resourceId('Microsoft.DocumentDB/databaseAccounts', parameters('AZURE_COSMOSDB_ACCOUNT'))]"
               },
               "dependsOn": [
