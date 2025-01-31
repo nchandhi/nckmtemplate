@@ -13,7 +13,8 @@ parameters:
     default: eastus2
   baseUrl:
     type: string
-    default: 'https://raw.githubusercontent.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator/main/'
+    # default: 'https://raw.githubusercontent.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator/main/'
+    default: 'https://raw.githubusercontent.com/nchandhi/nckmtemplate/main/'
 
 deployment:
   mode: Incremental
