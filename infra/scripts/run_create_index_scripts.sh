@@ -15,6 +15,9 @@ curl --output "02_create_cu_template_text.py" ${baseUrl}"infra/scripts/index_scr
 curl --output "03_cu_process_data_text.py" ${baseUrl}"infra/scripts/index_scripts/03_cu_process_data_text.py"\
 curl --output "content_understanding_client.py" ${baseUrl}"infra/scripts/index_scripts/content_understanding_client.py"
 
+curl --output "sample_processed_data.json" ${baseUrl}"infra/data/sample_processed_data.json"
+curl --output "sample_search_index_data.json" ${baseUrl}"infra/data/sample_search_index_data.json"
+
 # RUN apt-get update
 # RUN apt-get install python3 python3-dev g++ unixodbc-dev unixodbc libpq-dev
 # apk add python3 python3-dev g++ unixodbc-dev unixodbc libpq-dev

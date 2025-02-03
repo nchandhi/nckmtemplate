@@ -178,7 +178,6 @@ cursor.execute(create_processed_data_sql)
 conn.commit()
 
 
-
 AZURE_AI_ENDPOINT = get_secrets_from_kv(key_vault_name,"AZURE-OPENAI-CU-ENDPOINT")
 AZURE_AI_API_VERSION = "2024-12-01-preview" 
 
@@ -271,11 +270,39 @@ for path in paths:
             docs = []
             print(f' {str(counter)} uploaded')
     
-    time.sleep(4)
-    
 # upload the last batch
 if docs != []:
     search_client.upload_documents(documents=docs)
+
+##########################################################
+# load sample data to search index
+sample_import_file = 'sample_search_index_data.json'
+with open(import_file, 'r') as file:
+    documents = json.load(file)
+batch = [{"@search.action": "upload", **doc} for doc in documents]
+search_client.upload_documents(documents=batch)
+
+print(f'Successfully uploaded sample index data')   
+
+
+# Read JSON file
+sample_processed_data_file = 'sample_processed_data.json'
+import_table = 'processed_data'
+with open(sample_processed_data_file, "r") as f:
+    data = json.load(f)
+
+# Insert Data
+for row in data:
+    columns = ", ".join(row.keys())
+    placeholders = ", ".join(["%s"] * len(row))
+    values = tuple(row.values())
+    sql = f"INSERT INTO {import_table} ({columns}) VALUES ({placeholders})"
+    cursor.execute(sql, values)
+
+conn.commit()
+print(f"Imported {len(data)} records into {import_table}.")
+
+##########################################################
 
 sql_stmt = 'SELECT distinct topic FROM processed_data'
 cursor.execute(sql_stmt)
@@ -283,10 +310,8 @@ rows = cursor.fetchall()
 column_names = [i[0] for i in cursor.description]
 df = pd.DataFrame(rows, columns=column_names)
 
-
 cursor.execute('DROP TABLE IF EXISTS km_mined_topics')
 conn.commit()
-
 
 # write topics to the database table 
 create_mined_topics_sql = """CREATE TABLE km_mined_topics (

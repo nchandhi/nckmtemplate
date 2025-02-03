@@ -43,13 +43,23 @@ def create_search_index():
     # Create a search index 
     index_client = SearchIndexClient(endpoint=search_endpoint, credential=search_credential)
 
+    # fields = [
+    #     SimpleField(name="id", type=SearchFieldDataType.String, key=True, sortable=True, filterable=True, facetable=True),
+    #     SearchableField(name="chunk_id", type=SearchFieldDataType.String),
+    #     SearchableField(name="content", type=SearchFieldDataType.String),
+    #     SearchableField(name="sourceurl", type=SearchFieldDataType.String),
+    #     SearchField(name="contentVector", type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
+    #                 searchable=True, vector_search_dimensions=1536, vector_search_profile_name="myHnswProfile"),
+    # ]
+
     fields = [
-        SimpleField(name="id", type=SearchFieldDataType.String, key=True, sortable=True, filterable=True, facetable=True),
-        SearchableField(name="chunk_id", type=SearchFieldDataType.String),
-        SearchableField(name="content", type=SearchFieldDataType.String),
-        SearchableField(name="sourceurl", type=SearchFieldDataType.String),
-        SearchField(name="contentVector", type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
-                    searchable=True, vector_search_dimensions=1536, vector_search_profile_name="myHnswProfile"),
+        SimpleField(name="id", type=SearchFieldDataType.String, key=True),
+        SimpleField(name="chunk_id", type=SearchFieldDataType.String),
+        SearchField(name="content", type=SearchFieldDataType.String),
+        SimpleField(name="sourceurl", type=SearchFieldDataType.String),
+        SearchField(name="contentVector", type=SearchFieldDataType.Collection(SearchFieldDataType.Single), \
+        vector_search_dimensions=1536,vector_search_profile_name="myHnswProfile"
+        )
     ]
 
     # Configure the vector search configuration 
