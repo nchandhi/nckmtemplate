@@ -17,7 +17,7 @@ key_vault_name = 'kv_to-be-replaced'
 
 
 file_system_client_name = "data"
-directory = 'calltranscripts'
+directory = 'call_transcripts'
 
 def get_secrets_from_kv(kv_name, secret_name):
 
