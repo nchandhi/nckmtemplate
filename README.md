@@ -11,7 +11,7 @@ User story
 
 This template enables customers with large amounts of conversational data to improve decision-making by leveraging intelligence to uncover insights, relationships, and patterns from customer interactions. It empowers users to gain valuable knowledge and drive targeted business impact. 
 
-This template leverages Azure AI Foundry, Azure OpenAI, Microsoft Fabric, and Azure Search to transform large volumes of conversational data into actionable insights through topic modeling, key phrase extraction, speech-to-text transcription, and interactive chat experiences.
+This template leverages Azure AI Foundry, AI Content Understanding, Azure OpenAI,and Azure Search to transform large volumes of conversational data into actionable insights through topic modeling, key phrase extraction, speech-to-text transcription, and interactive chat experiences.
 
 
 ### Technical key features
@@ -30,7 +30,7 @@ This solution empowers analysts with tools to ask questions and receive real-tim
 
 The sample data used in this repository is synthetic and generated using Azure Open AI service. The data is intended for use as sample data only.
 
-### template architecture
+### Template architecture
 ![image](./Documents/Images/ReadMe/ckm-sol-arch.png)
 
 
@@ -45,7 +45,7 @@ To use this template, you will need access to an [Azure subscription](https://az
 
 ### **Options**
 Pick from the options below to see step-by-step instructions for: Bicep, GitHub Codespaces, VS Code Dev Containers, and Local Environments, deployments.
-We recommend using the first option (Bicep) because it is the fastest and easiest way to get started.
+<!-- We recommend using the first option (Bicep) because it is the fastest and easiest way to get started. -->
 
 <details>
   <summary><b>Deploy with Bicep/ARM template</b></summary>
@@ -66,56 +66,19 @@ We recommend using the first option (Bicep) because it is the fastest and easies
        -  Region - the region where the resources will be created in
 
        -  Solution Prefix - provide a 6 alphanumeric value that will be used to prefix resources
-      
+
+       -  content understanding location 
+
+       -  model deployment location 
+
+       -  model choice
+
+       -  select an existing ai hub
+
        -  Other Location - location of resources (required for Azure SQL and CosmoDB resources)
+       
            
-3.  **Create Fabric workspace**
-    1.  Navigate to ([Fabric Workspace](https://app.fabric.microsoft.com/))
-    2.  Click on Data Engineering experience
-    3.  Click on Workspaces from left Navigation
-    4.  Click on + New Workspace
-        1.  Provide Name of Workspace 
-        2.  Provide Description of Workspace (optional)
-        3.  Click Apply
-    5.  Open Workspace
-    6.  Create Environment
-        1.  Click ` + New Item ` (in Workspace)
-        2.  Select Environment from list
-        3.  Provide name for Environment and click Create
-        4.  Select Public libraries in left panel
-        5.  Click Add from .yml
-        6.  Upload .yml from [here](./Deployment/scripts/fabric_scripts/ckm_cu_env.yml)
-        7.  Click Publish
-    7.  Retrieve Workspace ID from URL, refer to documentation additional assistance ([here](https://learn.microsoft.com/en-us/fabric/admin/portal-workspace#identify-your-workspace-id))
 
-    ***Note: Wait until the Environment is finished publishing prior to proceeding witht the next steps.
-
-4.  **Deploy Fabric resources and artifacts**
-    1.   Navigate to ([Azure Portal](https://portal.azure.com/))
-    2.   Click on Azure Cloud Shell in the top right of navigation Menu (add image)
-    3.   Run the run the following commands:  
-         1.   ```az login``` ***Follow instructions in Azure Cloud Shell for login instructions
-         2.   ```rm -rf ./Conversation-Knowledge-Mining-Solution-Accelerator```
-         3.   ```git clone https://github.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator```
-         4.   ```cd ./Conversation-Knowledge-Mining-Solution-Accelerator/Deployment/scripts/fabric_scripts```
-         5.   ```sh ./run_fabric_items_scripts.sh keyvault_param workspaceid_param solutionprefix_param```
-              1.   keyvault_param - the name of the keyvault that was created in Step 1
-              2.   workspaceid_param - the workspaceid created in Step 2
-              3.   solutionprefix_param - prefix used to append to lakehouse upon creation
-5.  **Add App Authentication**
-   
-    Follow steps in [App Authentication](./Documents/AppAuthentication.md) to configure authenitcation in app service.
-
-### Upload additional files
-
-All files WAV files can be uploaded in the corresponding Lakehouse in the data/Files folder:
-
-- Audio (WAV files):
-  Upload Audio files in the *cu_audio_files_all* folder.
-
-### Post-deployment
-- To process additional files, manually execute the pipeline_notebook after uploading new files.
-- The OpenAI prompt can be modified within the Fabric notebooks.
 </details>
 
 <!-- <details>
@@ -191,25 +154,18 @@ Supporting documentation
 
 ### How to customize 
 
-If you'd like to customize the accelerator, here are some ways you might do that:
+If you'd like to customize the template, here are some ways you might do that:
 - Ingest your own [audio conversation files](./Documents/ConversationalDataFormat.md) by uploading them into the `cu_audio_files_all` lakehouse folder and run the data pipeline
+- Deploy with Microsoft Fabric by following the steps in [Fabric_deployment.md](./Documents/Fabric_deployment.md)
 
 ### Additional resources
 
-- [Microsoft Fabric documentation - Microsoft Fabric | Microsoft Learn](https://learn.microsoft.com/en-us/fabric/)
+<!-- - [Microsoft Fabric documentation - Microsoft Fabric | Microsoft Learn](https://learn.microsoft.com/en-us/fabric/) -->
 - [Azure OpenAI Service - Documentation, quickstarts, API reference - Azure AI services | Microsoft Learn](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/use-your-data)
 - [Azure AI Content Understanding documentation](https://learn.microsoft.com/en-us/azure/ai-services/content-understanding/)
 - [Azure AI Foundry documentation](https://learn.microsoft.com/en-us/azure/ai-studio/)
-- [Speech service documentation - Tutorials, API Reference - Azure AI services - Azure AI services | Microsoft Learn](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/)
+<!-- - [Speech service documentation - Tutorials, API Reference - Azure AI services - Azure AI services | Microsoft Learn](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/) -->
 
-
-### Version history
-
-#### Release 3
-An updated version of the Conversation Knowledge Mining (CKM) template was published on 01/17/2025. If you deployed the accelerator prior to that date, please note that CKM Release 3 cannot be deployed over CKM Release 2. Please also note that the CKM Release 3 conversation and audio file formats has been revised therefore files for prior releases are no longer compatible. For resources related to CKM Release 2, please visit our archive ([link-to-archive](https://github.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator/tree/ckm-v2)).
-
-#### Release 2
-An updated version of the Conversation Knowledge Mining (CKM) template was published on 08/15/2024. If you deployed the accelerator prior to that date, please note that CKM v2 cannot be deployed over CKM v1. Please also note that the CKM Release 2 JSON conversation file format has been revised to include additional metadata, therefore CKM v1 files are no longer compatible. For resources related to CKM v1, please visit our archive ([link-to-archive](https://github.com/microsoft/Conversation-Knowledge-Mining-Solution-Accelerator/tree/ckm-v1)).
 
 
 <h2>
