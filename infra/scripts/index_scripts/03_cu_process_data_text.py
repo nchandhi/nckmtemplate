@@ -15,7 +15,6 @@ import base64
 
 key_vault_name = 'kv_to-be-replaced'
 
-
 file_system_client_name = "data"
 directory = 'call_transcripts'
 
@@ -293,13 +292,34 @@ import_table = 'processed_data'
 with open(sample_processed_data_file, "r") as f:
     data = json.load(f)
 
-# Insert Data
+# Insert data
 for row in data:
-    columns = ", ".join(row.keys())
-    placeholders = ", ".join(["%s"] * len(row))
-    values = tuple(row.values())
+    columns = ", ".join(row.keys()) 
+    placeholders = ", ".join(["%s"] * len(row))  
+    values = tuple(row.values())  
+
     sql = f"INSERT INTO {import_table} ({columns}) VALUES ({placeholders})"
-    cursor.execute(sql, values)
+    cursor.execute(sql, values) 
+
+
+conn.commit()
+print(f"Imported {len(data)} records into {import_table}.")
+
+
+# Read JSON file
+sample_processed_data_file = 'sample_processed_data_key_phrases.json'
+import_table = 'processed_data_key_phrases'
+with open(sample_processed_data_file, "r") as f:
+    data = json.load(f)
+
+# Insert data
+for row in data:
+    columns = ", ".join(row.keys()) 
+    placeholders = ", ".join(["%s"] * len(row))  
+    values = tuple(row.values())  
+
+    sql = f"INSERT INTO {import_table} ({columns}) VALUES ({placeholders})"
+    cursor.execute(sql, values) 
 
 conn.commit()
 print(f"Imported {len(data)} records into {import_table}.")
