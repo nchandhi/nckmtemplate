@@ -3,21 +3,25 @@ name: Azure Template Validation and Deployment
 on:
   workflow_dispatch:  # Manually trigger via GitHub Actions interface
 
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
 jobs:
   validate-template:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Validate Azure Template
         uses: microsoft/template-validation-action@v0.2.2
         id: validation
         with:
-          workingDirectory: ./infra  # Pointing to the 'infra' folder where bicep files are located
-          validateAzd: true           
-          useDevContainer: false      
+          workingDirectory: ./nckmtemplate  
+          validateAzd: true                
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
