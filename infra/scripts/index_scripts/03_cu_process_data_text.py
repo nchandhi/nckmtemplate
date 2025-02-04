@@ -232,9 +232,9 @@ for path in paths:
     cursor.execute(f"INSERT INTO processed_data (ConversationId, EndTime, StartTime, Content, summary, satisfied, sentiment, topic, key_phrases, complaint) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (conversation_id, end_timestamp, start_timestamp, content, summary, satisfied, sentiment, topic, key_phrases, complaint))    
     conn.commit()
     
-    keyPhrases = key_phrases.split(',')
-    for keyPhrase in keyPhrases:
-        cursor.execute(f"INSERT INTO processed_data_key_phrases (ConversationId, key_phrase, sentiment) VALUES (%s,%s,%s)", (conversation_id, keyPhrase, sentiment))
+    # keyPhrases = key_phrases.split(',')
+    # for keyPhrase in keyPhrases:
+    #     cursor.execute(f"INSERT INTO processed_data_key_phrases (ConversationId, key_phrase, sentiment) VALUES (%s,%s,%s)", (conversation_id, keyPhrase, sentiment))
 
     document_id = conversation_id
 
@@ -306,23 +306,23 @@ conn.commit()
 print(f"Imported {len(data)} records into {import_table}.")
 
 
-# Read JSON file
-sample_processed_data_file = 'sample_processed_data_key_phrases.json'
-import_table = 'processed_data_key_phrases'
-with open(sample_processed_data_file, "r") as f:
-    data = json.load(f)
+# # Read JSON file
+# sample_processed_data_file = 'sample_processed_data_key_phrases.json'
+# import_table = 'processed_data_key_phrases'
+# with open(sample_processed_data_file, "r") as f:
+#     data = json.load(f)
 
-# Insert data
-for row in data:
-    columns = ", ".join(row.keys()) 
-    placeholders = ", ".join(["%s"] * len(row))  
-    values = tuple(row.values())  
+# # Insert data
+# for row in data:
+#     columns = ", ".join(row.keys()) 
+#     placeholders = ", ".join(["%s"] * len(row))  
+#     values = tuple(row.values())  
 
-    sql = f"INSERT INTO {import_table} ({columns}) VALUES ({placeholders})"
-    cursor.execute(sql, values) 
+#     sql = f"INSERT INTO {import_table} ({columns}) VALUES ({placeholders})"
+#     cursor.execute(sql, values) 
 
-conn.commit()
-print(f"Imported {len(data)} records into {import_table}.")
+# conn.commit()
+# print(f"Imported {len(data)} records into {import_table}.")
 
 ##########################################################
 
@@ -530,6 +530,107 @@ for index, row in df_processed_data.iterrows():
     mined_topic_str = get_mined_topic_mapping(row['topic'], str(mined_topics_list))
     cursor.execute(f"UPDATE processed_data SET mined_topic = %s WHERE ConversationId = %s", (mined_topic_str, row['ConversationId']))
     # print(f"Updated mined_topic for ConversationId: {row['ConversationId']}")
+conn.commit()
+
+
+# update processed data to be used in RAG
+cursor.execute('DROP TABLE IF EXISTS km_processed_data')
+conn.commit()
+
+create_processed_data_sql = """CREATE TABLE km_processed_data (
+                ConversationId varchar(255) NOT NULL PRIMARY KEY,
+                StartTime varchar(255),
+                EndTime varchar(255),
+                Content varchar(max),
+                summary varchar(max),
+                satisfied varchar(255),
+                sentiment varchar(255),
+                keyphrases nvarchar(max),
+                complaint varchar(255), 
+                topic varchar(255)
+            );"""
+cursor.execute(create_processed_data_sql)
+conn.commit()
+# sql_stmt = 'SELECT * FROM processed_data'
+sql_stmt = '''select ConversationId, StartTime, EndTime, Content, summary, satisfied, sentiment, 
+key_phrases as keyphrases, complaint, mined_topic as topic from processed_data'''
+
+cursor.execute(sql_stmt)
+
+rows = cursor.fetchall()
+column_names = [i[0] for i in cursor.description]
+df = pd.DataFrame(rows, columns=column_names)
+# df.rename(columns={'mined_topic': 'topic'}, inplace=True)
+# print(df.columns)
+for idx, row in df.iterrows():
+    # row['ConversationId'] = str(uuid.uuid4())
+    cursor.execute(f"INSERT INTO km_processed_data (ConversationId, StartTime, EndTime, Content, summary, satisfied, sentiment, keyphrases, complaint, topic) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", (row['ConversationId'], row['StartTime'], row['EndTime'], row['Content'], row['summary'], row['satisfied'], row['sentiment'], row['keyphrases'], row['complaint'], row['topic']))
+conn.commit()
+
+# update keyphrase table after the data update
+cursor.execute('DROP TABLE IF EXISTS processed_data_key_phrases')
+conn.commit()
+print("Dropped processed_data_key_phrases table")
+
+create_processed_data_sql = """CREATE TABLE processed_data_key_phrases (
+                ConversationId varchar(255),
+                key_phrase varchar(500), 
+                sentiment varchar(255),
+                topic varchar(255), 
+                StartTime varchar(255),
+            );"""
+cursor.execute(create_processed_data_sql)
+conn.commit()
+print('created processed_data_key_phrases table')
+
+sql_stmt = '''select ConversationId, key_phrases, sentiment, mined_topic as topic, StartTime from processed_data'''
+cursor.execute(sql_stmt)
+rows = cursor.fetchall()
+
+column_names = [i[0] for i in cursor.description]
+df = pd.DataFrame(rows, columns=column_names)
+columns_lst = df.columns
+print(columns_lst)
+
+for idx, row in df.iterrows(): 
+    key_phrases = row['key_phrases'].split(',')
+    for key_phrase in key_phrases:
+        key_phrase = key_phrase.strip()
+        cursor.execute(f"INSERT INTO processed_data_key_phrases (ConversationId, key_phrase, sentiment, topic, StartTime) VALUES (%s,%s,%s,%s,%s)", (row['ConversationId'], key_phrase, row['sentiment'], row['topic'], row['StartTime']))
+        # print(row['ConversationId'], key_phrase, row['sentiment'],row['topic'], row['StartTime1'])
+
+# sql_stmt = 'SELECT ConversationId,key_Phrases,sentiment, mined_topic as topic FROM processed_data'
+# cursor.execute(sql_stmt)
+# rows = cursor.fetchall()
+
+# # Generate the SQL query for insertion
+# insert_query = f"INSERT INTO processed_data_key_phrases (ConversationId, key_phrase, sentiment,topic) VALUES (%s, %s, %s, %s)"
+
+# # Perform the bulk insert
+# cursor.executemany(insert_query, rows)
+
+# chunk_size = 1000
+# for i in range(0, len(rows), chunk_size):
+#     cursor.executemany(insert_query, rows[i:i + chunk_size])
+
+conn.commit()
+
+# to adjust the dates to current date
+# Get today's date
+today = datetime.today()
+# Get the max StartTime from the processed_data table
+cursor.execute("SELECT MAX(CAST(StartTime AS DATETIME)) FROM [dbo].[processed_data]")
+max_start_time = cursor.fetchone()[0]
+# Calculate the days difference
+days_difference = (today - max_start_time).days - 1 if max_start_time else 0
+
+# Update processed_data table
+cursor.execute(f"UPDATE [dbo].[processed_data] SET StartTime = FORMAT(DATEADD(DAY, %s, StartTime), 'yyyy-MM-dd HH:mm:ss'), EndTime = FORMAT(DATEADD(DAY, %s, EndTime), 'yyyy-MM-dd HH:mm:ss')", (days_difference, days_difference))
+# Update km_processed_data table
+cursor.execute(f"UPDATE [dbo].[km_processed_data] SET StartTime = FORMAT(DATEADD(DAY, %s, StartTime), 'yyyy-MM-dd HH:mm:ss'), EndTime = FORMAT(DATEADD(DAY, %s, EndTime), 'yyyy-MM-dd HH:mm:ss')", (days_difference, days_difference))
+# Update processed_data_key_phrases table
+cursor.execute(f"UPDATE [dbo].[processed_data_key_phrases] SET StartTime = FORMAT(DATEADD(DAY, %s, StartTime), 'yyyy-MM-dd HH:mm:ss')", (days_difference,))
+# Commit the changes
 conn.commit()
 
 
