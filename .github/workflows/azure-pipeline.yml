@@ -16,8 +16,8 @@ jobs:
         id: validation
         with:
           workingDirectory: ./infra  # Pointing to the 'infra' folder where bicep files are located
-          useDevContainer: true  # Set to true to use devcontainer
-          devContainerPath: ./.devcontainer  # Point to the devcontainer in the root directory
+          validateAzd: true           # Enable Azure template validation (adjust based on your needs)
+          useDevContainer: false      # Avoid devcontainer error if it's not strictly necessary
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
