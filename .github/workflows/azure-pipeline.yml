@@ -13,9 +13,11 @@ jobs:
 
       - name: Validate Azure Template
         uses: microsoft/template-validation-action@v0.2.2
-        id: validation  # Add an id to reference this step later
+        id: validation
         with:
-          workingDirectory: ./infra  # This points to the 'infra' folder where bicep files are located
+          workingDirectory: ./infra  # Pointing to the 'infra' folder where bicep files are located
+          useDevContainer: true  # Set to true to use devcontainer
+          devContainerPath: ./.devcontainer  # Point to the devcontainer in the root directory
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
