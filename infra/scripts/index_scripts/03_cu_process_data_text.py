@@ -279,7 +279,7 @@ if docs != []:
 ##########################################################
 # load sample data to search index
 sample_import_file = 'sample_search_index_data.json'
-with open(import_file, 'r') as file:
+with open(sample_import_file, 'r') as file:
     documents = json.load(file)
 batch = [{"@search.action": "upload", **doc} for doc in documents]
 search_client.upload_documents(documents=batch)
