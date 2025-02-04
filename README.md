@@ -81,7 +81,7 @@ Pick from the options below to see step-by-step instructions for: Bicep, GitHub 
 
 </details>
 
-<!-- <details>
+<details>
   <summary><b>Deploy in GitHub Codespaces</b></summary>
 
  ### GitHub Codpespaces
@@ -90,12 +90,12 @@ You can run this template virtually by using GitHub Codespaces. The button will 
 
 1. Open the template (this may take several minutes):
 
-    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/Azure-Samples/azureai-basic-python)
+    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/nchandhi/nckmtemplate)
 
 2. Open a terminal window
 3. Continue with the [deploying steps](#deploying)
 
-</details> -->
+</details>
 
 <details>
   <summary><b>Deploy in VS Code</b></summary>
