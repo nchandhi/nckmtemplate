@@ -42,7 +42,7 @@ client = AzureContentUnderstandingClient(
 )
 
 
-ANALYZER_ID = "ckm-4"
+ANALYZER_ID = "ckm-json"
 ANALYZER_TEMPLATE_FILE = 'ckm-analyzer_config_text.json'
 
 

@@ -1,4 +1,4 @@
-# Conversation knowledge mining template
+# Conversation knowledge mining solution accelerator
 
 MENU: [**USER STORY**](#user-story) \| [**QUICK DEPLOY**](#quick-deploy)  \| [**SUPPORTING DOCUMENTATION**](#supporting-documentation) 
 
@@ -9,16 +9,16 @@ User story
 
 ### Overview
 
-This template enables customers with large amounts of conversational data to improve decision-making by leveraging intelligence to uncover insights, relationships, and patterns from customer interactions. It empowers users to gain valuable knowledge and drive targeted business impact. 
+This solution accelerator enables customers with large amounts of conversational data to improve decision-making by leveraging intelligence to uncover insights, relationships, and patterns from customer interactions. It empowers users to gain valuable knowledge and drive targeted business impact. 
 
-This template leverages Azure AI Foundry, AI Content Understanding, Azure OpenAI,and Azure Search to transform large volumes of conversational data into actionable insights through topic modeling, key phrase extraction, speech-to-text transcription, and interactive chat experiences.
+This solution accelerator leverages Azure AI Foundry, AI Content Understanding, Azure OpenAI,and Azure Search to transform large volumes of conversational data into actionable insights through topic modeling, key phrase extraction, speech-to-text transcription, and interactive chat experiences.
 
 
 ### Technical key features
 
 ![image](./Documents/Images/ReadMe/techkeyfeatures.png)
 
-Below is an image of the template.
+Below is an image of the solution accelerator.
 
 ![image](./Documents/Images/ReadMe/ckm-ui.png)
 
@@ -30,7 +30,7 @@ This solution empowers analysts with tools to ask questions and receive real-tim
 
 The sample data used in this repository is synthetic and generated using Azure Open AI service. The data is intended for use as sample data only.
 
-### Template architecture
+### Solution accelerator architecture
 ![image](./Documents/Images/ReadMe/ckm-sol-arch.png)
 
 
@@ -41,14 +41,14 @@ Deployment & installation
 
 ### **Prerequisites**
 
-To use this template, you will need access to an [Azure subscription](https://azure.microsoft.com/free/) with permission to create resource groups and resources. 
+To use this solution accelerator, you will need access to an [Azure subscription](https://azure.microsoft.com/free/) with permission to create resource groups and resources. 
 
 ### **Options**
 Pick from the options below to see step-by-step instructions for: Bicep, GitHub Codespaces, VS Code Dev Containers, and Local Environments, deployments.
 <!-- We recommend using the first option (Bicep) because it is the fastest and easiest way to get started. -->
 
 <details>
-  <summary><b>Deploy with Bicep/ARM template</b></summary>
+  <summary><b>Deploy with Bicep/ARM solution accelerator</b></summary>
 
 ### Quick Deploy (Bicep)
 
@@ -58,6 +58,7 @@ Pick from the options below to see step-by-step instructions for: Bicep, GitHub 
    Click the following deployment button to create the required resources for this accelerator directly in your Azure Subscription.
 
    [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fnchandhi%2Fnckmtemplate%2Fmain%2Finfra%2Fmain.json)
+
 
 
 
@@ -86,11 +87,11 @@ Pick from the options below to see step-by-step instructions for: Bicep, GitHub 
 
  ### GitHub Codpespaces
 
-You can run this template virtually by using GitHub Codespaces. The button will open a web-based VS Code instance in your browser:
+You can run this solution accelerator virtually by using GitHub Codespaces. The button will open a web-based VS Code instance in your browser:
 
-1. Open the template (this may take several minutes):
+1. Open the solution accelerator (this may take several minutes):
 
-    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/nchandhi/nckmtemplate)
+    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/nchandhi/nckmsolution accelerator)
 
 2. Open a terminal window
 3. Continue with the [deploying steps](#deploying)
@@ -107,7 +108,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 1. Start Docker Desktop (install it if not already installed)
 2. Open the project:
 
-    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/nchandhi/nckmtemplate)
+    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/nchandhi/nckmsolution accelerator)
 
 
 3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
@@ -154,7 +155,7 @@ Supporting documentation
 
 ### How to customize 
 
-If you'd like to customize the template, here are some ways you might do that:
+If you'd like to customize the solution accelerator, here are some ways you might do that:
 - Ingest your own [audio conversation files](./Documents/ConversationalDataFormat.md) by uploading them into the `cu_audio_files_all` lakehouse folder and run the data pipeline
 - Deploy with Microsoft Fabric by following the steps in [Fabric_deployment.md](./Documents/Fabric_deployment.md)
 
@@ -173,7 +174,7 @@ If you'd like to customize the template, here are some ways you might do that:
 Responsible AI Transparency FAQ 
 </h2>
 
-Please refer to [Transparency FAQ](./TRANSPARENCY_FAQ.md) for responsible AI transparency details of this template.
+Please refer to [Transparency FAQ](./TRANSPARENCY_FAQ.md) for responsible AI transparency details of this solution accelerator.
 
 <br/>
 <br/>
