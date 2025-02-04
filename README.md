@@ -57,7 +57,8 @@ Pick from the options below to see step-by-step instructions for: Bicep, GitHub 
 2. **Deploy Azure resources**  
    Click the following deployment button to create the required resources for this accelerator directly in your Azure Subscription.
 
-   [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.solution accelerator/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fnchandhi%2Fnckmsolution accelerator%2Fmain%2Finfra%2Fmain.json)
+   [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fnchandhi%2Fnckmtemplate%2Fmain%2Finfra%2Fmain.json)
+
 
 
 
