@@ -67,7 +67,7 @@ param AZURE_COSMOSDB_ENABLE_FEEDBACK string = 'True'
 
 // var WebAppImageName = 'DOCKER|ncwaappcontainerreg1.azurecr.io/ncqaappimage:v1.0.0'
 
-var WebAppImageName = 'DOCKER|kmcontainerreg.azurecr.io/km-app:latest'
+var WebAppImageName = 'DOCKER|kmcontainerreg.azurecr.io/km-app:citationfunc'
 
 resource HostingPlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   name: HostingPlanName

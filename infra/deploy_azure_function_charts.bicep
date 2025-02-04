@@ -10,7 +10,7 @@ param sqlDbPwd string
 
 var functionAppName = '${solutionName}-charts-fn'
 var storageaccountname = '${solutionName}chartsfnacc'
-var dockerImage = 'DOCKER|kmcontainerreg.azurecr.io/km-charts-function:latest'
+var dockerImage = 'DOCKER|kmcontainerreg.azurecr.io/km-charts-function:citationfunc'
 var environmentName = '${solutionName}-charts-fn-env'
 
 // var sqlServerName = 'nc2202-sql-server.database.windows.net'
