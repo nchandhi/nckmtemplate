@@ -24,7 +24,7 @@ jobs:
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Validate Azure Template
-        uses: microsoft/template-validation-action@v0.2.2
+        uses: microsoft/template-validation-action@v0.3.2
         id: validation
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
