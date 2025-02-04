@@ -1,9 +1,7 @@
 name: Azure Template Validation and Deployment
 
 on:
-  push:
-    branches:
-      - main 
+  workflow_dispatch:  # Manually trigger via GitHub Actions interface
 
 jobs:
   validate-template:
@@ -15,15 +13,19 @@ jobs:
 
       - name: Validate Azure Template
         uses: microsoft/template-validation-action@v0.2.2
+        id: validation  # Add an id to reference this step later
         with:
-          workingDirectory: ./infra 
+          workingDirectory: ./infra  # This points to the 'infra' folder where bicep files are located
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_ENV_NAME: ${{ secrets.AZURE_ENV_NAME }}
-          AZURE_LOCATION: ${{ secrets.AZURE_LOCATION }} 
+          AZURE_LOCATION: ${{ secrets.AZURE_LOCATION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print result
+        run: cat ${{ steps.validation.outputs.resultFile }}  # Output the result of the validation step
 
   deploy-azure:
     runs-on: ubuntu-latest
