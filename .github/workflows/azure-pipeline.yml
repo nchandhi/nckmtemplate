@@ -16,7 +16,7 @@ jobs:
       - name: Validate Azure Template
         uses: microsoft/template-validation-action@v0.2.2
         with:
-          workingDirectory: ./infra  # Pointing to the 'infra' folder where bicep files are located
+          workingDirectory: ./infra 
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
