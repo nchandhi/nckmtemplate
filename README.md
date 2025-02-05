@@ -68,13 +68,13 @@ Pick from the options below to see step-by-step instructions for: Bicep, GitHub 
 
        -  Solution Prefix - provide a 6 alphanumeric value that will be used to prefix resources
 
-       -  content understanding location 
+       -  Content Understanding location 
 
-       -  model deployment location 
+       -  Model deployment location 
 
-       -  model choice
+       -  Model choice
 
-       -  select an existing ai hub
+       -  Select an existing AI Hub
 
        -  Other Location - location of resources (required for Azure SQL and CosmoDB resources)
        
@@ -91,7 +91,7 @@ You can run this solution accelerator virtually by using GitHub Codespaces. The 
 
 1. Open the solution accelerator (this may take several minutes):
 
-    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/nchandhi/nckmsolution accelerator)
+    [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/nchandhi/nckmtemplate)
 
 2. Open a terminal window
 3. Continue with the [deploying steps](#deploying)
@@ -108,7 +108,7 @@ A related option is VS Code Dev Containers, which will open the project in your 
 1. Start Docker Desktop (install it if not already installed)
 2. Open the project:
 
-    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/nchandhi/nckmsolution accelerator)
+    [![Open in Dev Containers](https://img.shields.io/static/v1?style=for-the-badge&label=Dev%20Containers&message=Open&color=blue&logo=visualstudiocode)](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/nchandhi/nckmtemplate)
 
 
 3. In the VS Code window that opens, once the project files show up (this may take several minutes), open a terminal window.
