@@ -1,6 +1,6 @@
-name: Azure Template Validation
-on:
-  workflow_dispatch:  # Manually trigger via GitHub Actions interface
+name: Template Validation
+on: 
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -10,33 +10,19 @@ permissions:
 jobs:
   template_validation_job:
     runs-on: ubuntu-latest
-    name: Template validation
-
+    name: template validation
     steps:
-      # Step 1: Checkout the code from your repository
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Step 2:  Azure Login with OIDC Authentication
-      - name: Azure Login with OIDC
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Step 3: Validate the Azure template using microsoft/template-validation-action
-      - name: Validate Azure Template
-        uses: microsoft/template-validation-action@v0.3.2
+      - uses: microsoft/template-validation-action@v0.3.2
         id: validation
         env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          AZURE_ENV_NAME: ${{ secrets.AZURE_ENV_NAME }}
-          AZURE_LOCATION: ${{ secrets.AZURE_LOCATION }}
+          AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+          AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+          AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Step 3: Print the result of the validation
-      - name: Print result
+      - name: print result
         run: cat ${{ steps.validation.outputs.resultFile }}
