@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.28.1.47646",
-      "templateHash": "13875686241486028980"
+      "templateHash": "6710258342910906405"
     }
   },
   "parameters": {
@@ -1595,7 +1595,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "7377985017670794232"
+              "templateHash": "17755809597278204693"
             }
           },
           "parameters": {
@@ -1624,7 +1624,7 @@
           "variables": {
             "functionAppName": "[format('{0}-charts-fn', parameters('solutionName'))]",
             "storageaccountname": "[format('{0}chartsfnacc', parameters('solutionName'))]",
-            "dockerImage": "DOCKER|kmcontainerreg.azurecr.io/km-charts-function:latest",
+            "dockerImage": "DOCKER|kmcontainerreg.azurecr.io/km-charts-function:citationfunc",
             "environmentName": "[format('{0}-charts-fn-env', parameters('solutionName'))]"
           },
           "resources": [
@@ -1810,7 +1810,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "5534034460660265862"
+              "templateHash": "15532902526777432081"
             }
           },
           "parameters": {
@@ -1857,7 +1857,7 @@
           "variables": {
             "functionAppName": "[format('{0}-rag-fn', parameters('solutionName'))]",
             "storageaccountname": "[format('{0}ragfnacc', parameters('solutionName'))]",
-            "dockerImage": "DOCKER|kmcontainerreg.azurecr.io/km-rag-function:latest",
+            "dockerImage": "DOCKER|kmcontainerreg.azurecr.io/km-rag-function:citationfunc",
             "environmentName": "[format('{0}-rag-fn-env', parameters('solutionName'))]"
           },
           "resources": [
@@ -2154,7 +2154,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.28.1.47646",
-              "templateHash": "17903362475921729801"
+              "templateHash": "9817225070812764231"
             }
           },
           "parameters": {
@@ -2305,7 +2305,7 @@
             }
           },
           "variables": {
-            "WebAppImageName": "DOCKER|kmcontainerreg.azurecr.io/km-app:latest",
+            "WebAppImageName": "DOCKER|kmcontainerreg.azurecr.io/km-app:citationfunc",
             "REACT_APP_LAYOUT_CONFIG": "{\n  \"appConfig\": {\n    \"THREE_COLUMN\": {\n      \"DASHBOARD\": 50,\n      \"CHAT\": 33,\n      \"CHATHISTORY\": 17\n    },\n    \"TWO_COLUMN\": {\n      \"DASHBOARD_CHAT\": {\n        \"DASHBOARD\": 65,\n        \"CHAT\": 35\n      },\n      \"CHAT_CHATHISTORY\": {\n        \"CHAT\": 80,\n        \"CHATHISTORY\": 20\n      }\n    }\n  },\n  \"charts\": [\n    {\n      \"id\": \"SATISFIED\",\n      \"name\": \"Satisfied\",\n      \"type\": \"card\",\n      \"layout\": { \"row\": 1, \"column\": 1, \"height\": 11 }\n    },\n    {\n      \"id\": \"TOTAL_CALLS\",\n      \"name\": \"Total Calls\",\n      \"type\": \"card\",\n      \"layout\": { \"row\": 1, \"column\": 2, \"span\": 1 }\n    },\n    {\n      \"id\": \"AVG_HANDLING_TIME\",\n      \"name\": \"Average Handling Time\",\n      \"type\": \"card\",\n      \"layout\": { \"row\": 1, \"column\": 3, \"span\": 1 }\n    },\n    {\n      \"id\": \"SENTIMENT\",\n      \"name\": \"Topics Overview\",\n      \"type\": \"donutchart\",\n      \"layout\": { \"row\": 2, \"column\": 1, \"width\": 40, \"height\": 44.5 }\n    },\n    {\n      \"id\": \"AVG_HANDLING_TIME_BY_TOPIC\",\n      \"name\": \"Average Handling Time By Topic\",\n      \"type\": \"bar\",\n      \"layout\": { \"row\": 2, \"column\": 2, \"row-span\": 2, \"width\": 60 }\n    },\n    {\n      \"id\": \"TOPICS\",\n      \"name\": \"Trending Topics\",\n      \"type\": \"table\",\n      \"layout\": { \"row\": 3, \"column\": 1, \"span\": 2 }\n    },\n    {\n      \"id\": \"KEY_PHRASES\",\n      \"name\": \"Key Phrases\",\n      \"type\": \"wordcloud\",\n      \"layout\": { \"row\": 3, \"column\": 2, \"height\": 44.5 }\n    }\n  ]\n}"
           },
           "resources": [
