@@ -1,4 +1,4 @@
-name: Azure Template Validation and Deployment
+name: Azure Template Validation
 on:
   workflow_dispatch:  # Manually trigger via GitHub Actions interface
 
@@ -8,24 +8,16 @@ permissions:
   pull-requests: write
 
 jobs:
-  validate-template:
+  template_validation_job:
     runs-on: ubuntu-latest
-    name: template validation
+    name: Template validation
+
     steps:
+      # Step 1: Checkout the code from your repository
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Login to Azure
-        run: |
-          # Login to Azure using Service Principal credentials
-          az login --service-principal -u "${{ secrets.AZURE_CLIENT_ID }}" -p "${{ secrets.AZURE_CLIENT_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
-          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
-        env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
+      # Step 2: Validate the Azure template using microsoft/template-validation-action
       - name: Validate Azure Template
         uses: microsoft/template-validation-action@v0.3.2
         id: validation
@@ -35,8 +27,8 @@ jobs:
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_ENV_NAME: ${{ secrets.AZURE_ENV_NAME }}
           AZURE_LOCATION: ${{ secrets.AZURE_LOCATION }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Step 3: Print the result of the validation
       - name: Print result
-        run: cat ${{ steps.validation.outputs.resultFile }}  # Output the result of the validation step
+        run: cat ${{ steps.validation.outputs.resultFile }}
