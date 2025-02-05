@@ -1,5 +1,4 @@
 name: Azure Template Validation and Deployment
-
 on:
   workflow_dispatch:  # Manually trigger via GitHub Actions interface
 
@@ -11,43 +10,33 @@ permissions:
 jobs:
   validate-template:
     runs-on: ubuntu-latest
-    name: Template validation
+    name: template validation
     steps:
-      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # Set up Azure CLI to authenticate
-      - name: Setup Azure CLI
-        uses: azure/setup-azd@v2
-        with:
-          azure-subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      # Login to Azure using Service Principal credentials
       - name: Login to Azure
         run: |
-          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
-          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          # Login to Azure using Service Principal credentials
+          az login --service-principal -u "${{ secrets.AZURE_CLIENT_ID }}" -p "${{ secrets.AZURE_CLIENT_SECRET }}" --tenant "${{ secrets.AZURE_TENANT_ID }}"
+          az account set --subscription "${{ secrets.AZURE_SUBSCRIPTION_ID }}"
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Run the Azure Template Validation
       - name: Validate Azure Template
         uses: microsoft/template-validation-action@v0.3.2
         id: validation
-        with:
-          workingDirectory: .  
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           AZURE_ENV_NAME: ${{ secrets.AZURE_ENV_NAME }}
           AZURE_LOCATION: ${{ secrets.AZURE_LOCATION }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Print the validation result
       - name: Print result
         run: cat ${{ steps.validation.outputs.resultFile }}  # Output the result of the validation step
